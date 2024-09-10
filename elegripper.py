@@ -766,7 +766,7 @@ class Gripper(Command):
             return self.set_gripper_angle(0)
             
         
-# if __name__=="main":
+# if __name__=="__main__":
 #     g=Gripper("COM27")#Enter the actual serial port number
 #     g.set_gripper_state(0,100)
 #     time.sleep(2)
