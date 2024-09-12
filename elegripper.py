@@ -29,18 +29,19 @@ class Command():
 
 class Gripper(Command):
 
-    def __init__(self,port,baudrate=115200) :
+    def __init__(self,port,baudrate=115200,id=1) :
         """
         Args:
             port : Serial port number
             baudrate : Baud rate,Defaults to 115200.
+            id: Gripper ID, default is 1
         """
  
         self.lock=threading.Lock()
         self.port = port  
         self.baudrate = baudrate 
         self.ser = serial.Serial(port, baudrate,timeout=20)
-            
+        self.cmd_list[3]=id   
 
     def __byte_deal(self,value1,value2):
         """Convert decimal to hexadecimal
@@ -764,19 +765,3 @@ class Gripper(Command):
             return self.set_gripper_value(100)
         elif value==0:
             return self.set_gripper_value(0)
-            
-        
-
-
-
-    
-    
-    
-
-    
-
-
-    
-   
-
-
