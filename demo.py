@@ -6,5 +6,5 @@ if __name__=="__main__":
     time.sleep(2)
     g.set_gripper_value(0,100)
     time.sleep(2)
-    print(g.get_gripper_value())
+    print(g.get_gripper_Id())
 
