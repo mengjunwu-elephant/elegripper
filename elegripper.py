@@ -42,7 +42,7 @@ class Gripper(Command):
         self.ser = serial.Serial(port, baudrate,timeout=20)
             
 
-    def byte_deal(self,value1,value2):
+    def __byte_deal(self,value1,value2):
         """Convert decimal to hexadecimal
 
         Args:
@@ -59,7 +59,7 @@ class Gripper(Command):
         return [high_byte1,low_byte1,high_byte2,low_byte2]
 
 
-    def crc16_modbus(self,data: bytes) -> bytes:
+    def __crc16_modbus(self,data: bytes) -> bytes:
         """CRC16 modbus check bit generation
 
         Args:
@@ -79,7 +79,7 @@ class Gripper(Command):
                     crc >>= 1
         return crc.to_bytes(2, byteorder='big')
     
-    def send_cmd(self,cmd):
+    def __send_cmd(self,cmd):
         """Processing Messages
 
         Args:
@@ -92,7 +92,7 @@ class Gripper(Command):
             Response Reply,If the data length is incorrect, -1 is returned; if the CRC check is incorrect, -2 is returned.
         """
         with self.lock:
-            send_data=cmd+self.crc16_modbus(cmd)
+            send_data=cmd+self.__crc16_modbus(cmd)
             # print(send_data.hex())
             self.ser.write(send_data)
             self.ser.flush()
@@ -104,7 +104,7 @@ class Gripper(Command):
             if len(recv_data) == 11:  
                 data = recv_data[0:9]  
                 crc_data=recv_data[9:]
-                if self.crc16_modbus(data)== crc_data:
+                if self.__crc16_modbus(data)== crc_data:
                     response= data+crc_data
                     result=int(response.hex()[14:18],16)      
                     return result
@@ -117,7 +117,7 @@ class Gripper(Command):
             
     
     def set_gripper_value(self,value,speed=100):
-        """Setting the gripper angle
+        """Setting the gripper position
 
         Args:
             value (int): Angle range 0-100
@@ -129,11 +129,11 @@ class Gripper(Command):
 
         self.set_gripper_speed(speed)
         self.cmd_list[4]=6
-        tmp=self.byte_deal(11,value)
+        tmp=self.__byte_deal(11,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
 
       
     def set_gripper_speed(self,value):
@@ -146,11 +146,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(32,value)
+        tmp=self.__byte_deal(32,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_enable(self,value):
         """Set the gripper to enable
@@ -162,11 +162,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(10,value)
+        tmp=self.__byte_deal(10,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_calibration(self):
         """Setting the gripper Calibration
@@ -175,25 +175,25 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(13,0)
+        tmp=self.__byte_deal(13,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
 
     def get_gripper_value(self):
-        """Get the gripper angle
+        """Get the gripper position
 
         Returns:
             Response results:angle value: 0-100
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(12,0)
+        tmp=self.__byte_deal(12,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
         
         
     def get_gripper_status(self):
@@ -207,11 +207,11 @@ class Gripper(Command):
             3 - After clamping detected, the object fell
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(14,0)
+        tmp=self.__byte_deal(14,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
 
     def get_firmware_version(self):
         """Get the firmware major version number
@@ -220,11 +220,11 @@ class Gripper(Command):
             Response results
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(1,0)
+        tmp=self.__byte_deal(1,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_modified_version(self):
         """Get the firmware minor version number
@@ -233,11 +233,11 @@ class Gripper(Command):
             Response results
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(2,0)
+        tmp=self.__byte_deal(2,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
 
     def set_gripper_Id(self,value):
         """Set the gripper ID
@@ -249,11 +249,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(3,value)
+        tmp=self.__byte_deal(3,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_Id(self):
         """Get the gripper ID
@@ -262,11 +262,11 @@ class Gripper(Command):
             Response results
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(4,0)
+        tmp=self.__byte_deal(4,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_baud(self,value=0):
         """Setting the baud rate
@@ -285,11 +285,11 @@ class Gripper(Command):
         """
         if -1<value<6:
             self.cmd_list[4]=6
-            tmp=self.byte_deal(5,value)
+            tmp=self.__byte_deal(5,value)
             for i in range(5,9):
                 self.cmd_list[i]=tmp[i-5]
             cmd=bytes(self.cmd_list)
-            return self.send_cmd(cmd)
+            return self.__send_cmd(cmd)
         else:
             print("The baud rate selection range is 0 to 5")
             return None
@@ -308,11 +308,11 @@ class Gripper(Command):
 
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(6,0)
+        tmp=self.__byte_deal(6,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_P(self,value):
         """Set the gripper P value
@@ -324,11 +324,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(15,value)
+        tmp=self.__byte_deal(15,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_P(self):
         """Get the gripper P value
@@ -337,11 +337,11 @@ class Gripper(Command):
             Response results:0-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(16,0)
+        tmp=self.__byte_deal(16,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_D(self,value):
         """Set the gripper D value
@@ -353,11 +353,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(17,value)
+        tmp=self.__byte_deal(17,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_D(self):
         """Get the gripper P value
@@ -366,11 +366,11 @@ class Gripper(Command):
             Response results:0-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(18,0)
+        tmp=self.__byte_deal(18,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_I(self,value):
         """Set the gripper I value
@@ -382,11 +382,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(19,value)
+        tmp=self.__byte_deal(19,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_I(self):
         """Get the gripper I value
@@ -395,11 +395,11 @@ class Gripper(Command):
             Response results:0-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(20,0)
+        tmp=self.__byte_deal(20,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_cw(self,value):
         """Set the clockwise runnable error of the gripper
@@ -411,11 +411,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(21,value)
+        tmp=self.__byte_deal(21,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_cw(self):
         """Get the clockwise runnable error of the gripper
@@ -424,11 +424,11 @@ class Gripper(Command):
             Response results:0-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(22,0)
+        tmp=self.__byte_deal(22,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_cww(self,value):
         """Set the anti-clockwise runnable error of the gripper
@@ -440,11 +440,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(23,value)
+        tmp=self.__byte_deal(23,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_cww(self):
         """Get the anti-clockwise runnable error of the gripper
@@ -453,11 +453,11 @@ class Gripper(Command):
             Response results:0-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(24,0)
+        tmp=self.__byte_deal(24,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
 
     def set_gripper_mini_pressure(self,value):
@@ -470,11 +470,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(25,value)
+        tmp=self.__byte_deal(25,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_mini_pressure(self):
         """Get the minimum starting force of the gripper
@@ -483,11 +483,11 @@ class Gripper(Command):
             Response results:0-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(26,0)
+        tmp=self.__byte_deal(26,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
 
     def set_gripper_torque(self,value):
@@ -500,11 +500,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(27,value)
+        tmp=self.__byte_deal(27,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_torque(self):
         """Get the gripper jaw torque
@@ -513,11 +513,11 @@ class Gripper(Command):
             Response results:0-300
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(28,0)
+        tmp=self.__byte_deal(28,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_output(self,value=0):
         """Set the gripper OUT output
@@ -540,11 +540,11 @@ class Gripper(Command):
         else:
             return None
         self.cmd_list[4]=6
-        tmp=self.byte_deal(29,value)
+        tmp=self.__byte_deal(29,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_io_open_value(self,value):
         """Set the io opening angle
@@ -556,11 +556,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(30,value)
+        tmp=self.__byte_deal(30,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_io_close_value(self,value):
         """Set io closing angle
@@ -572,11 +572,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(31,value)
+        tmp=self.__byte_deal(31,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_speed(self):
         """Get the gripper speed
@@ -585,11 +585,11 @@ class Gripper(Command):
             Response results:1-100
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(33,0)
+        tmp=self.__byte_deal(33,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_io_open_value(self):
         """Get the io opening angle
@@ -598,11 +598,11 @@ class Gripper(Command):
             Response results:0-100
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(34,0)
+        tmp=self.__byte_deal(34,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_io_close_value(self):
         """Get io closing angle
@@ -611,11 +611,11 @@ class Gripper(Command):
             Response results:0-100
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(35,0)
+        tmp=self.__byte_deal(35,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_abs_gripper_value(self,value,speed=100):
         """Set the absolute angle that the gripper reaches
@@ -630,11 +630,11 @@ class Gripper(Command):
         """
         self.set_gripper_speed(speed)
         self.cmd_list[4]=6
-        tmp=self.byte_deal(36,value)
+        tmp=self.__byte_deal(36,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_pause(self):
         """Set the gripper to pause motion
@@ -643,12 +643,12 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(37,0)
+        tmp=self.__byte_deal(37,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
         print(cmd.hex())
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_resume(self):
         """Set the gripper recovery motion
@@ -657,11 +657,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(38,0)
+        tmp=self.__byte_deal(38,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_stop(self):
         """Set the command to stop the gripper and clear the cache
@@ -670,11 +670,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(39,0)
+        tmp=self.__byte_deal(39,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
 
     def get_gripper_queue_count(self):
@@ -684,11 +684,11 @@ class Gripper(Command):
             Response results
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(40,0)
+        tmp=self.__byte_deal(40,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_vir_pos(self,value):
         """Set the virtual position value of the servo
@@ -700,11 +700,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(41,value)
+        tmp=self.__byte_deal(41,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_vir_pos(self):
         """Get the virtual position value of the servo
@@ -713,11 +713,11 @@ class Gripper(Command):
             Response results:0-100
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(42,0)
+        tmp=self.__byte_deal(42,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_protection_current(self,value):
         """Set the gripper clamping current
@@ -729,11 +729,11 @@ class Gripper(Command):
             Response results:0 represents failure, 1 represents success
         """
         self.cmd_list[4]=6
-        tmp=self.byte_deal(43,value)
+        tmp=self.__byte_deal(43,value)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def get_gripper_protection_current(self):
         """Get the gripper clamping current
@@ -742,14 +742,14 @@ class Gripper(Command):
             Response results:1-254
         """
         self.cmd_list[4]=3
-        tmp=self.byte_deal(44,0)
+        tmp=self.__byte_deal(44,0)
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        return self.send_cmd(cmd)
+        return self.__send_cmd(cmd)
     
     def set_gripper_state(self,value,speed=100):
-        """Set the gripper angle to fully open or fully closed
+        """Set the gripper position to fully open or fully closed
 
         Args:
             value (int): The value range is 0-1
