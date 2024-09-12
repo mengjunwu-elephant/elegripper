@@ -1,7 +1,7 @@
 from elegripper import Gripper
 import time
 if __name__=="__main__":
-    g=Gripper("COM8",115200)##填写实际的串口号和波特率
+    g=Gripper("COM8",115200,1)##填写实际的串口号和波特率和夹爪ID
     g.set_gripper_value(100,100)
     time.sleep(2)
     g.set_gripper_value(0,100)
