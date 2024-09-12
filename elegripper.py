@@ -116,7 +116,7 @@ class Gripper(Command):
                  
             
     
-    def set_gripper_angle(self,value,speed=100):
+    def set_gripper_value(self,value,speed=100):
         """Setting the gripper angle
 
         Args:
@@ -182,7 +182,7 @@ class Gripper(Command):
         return self.send_cmd(cmd)
     
 
-    def get_gripper_angle(self):
+    def get_gripper_value(self):
         """Get the gripper angle
 
         Returns:
@@ -546,7 +546,7 @@ class Gripper(Command):
         cmd=bytes(self.cmd_list)
         return self.send_cmd(cmd)
     
-    def set_io_open_angle(self,value):
+    def set_gripper_io_open_value(self,value):
         """Set the io opening angle
 
         Args:
@@ -562,7 +562,7 @@ class Gripper(Command):
         cmd=bytes(self.cmd_list)
         return self.send_cmd(cmd)
     
-    def set_io_close_angle(self,value):
+    def set_gripper_io_close_value(self,value):
         """Set io closing angle
 
         Args:
@@ -578,7 +578,7 @@ class Gripper(Command):
         cmd=bytes(self.cmd_list)
         return self.send_cmd(cmd)
     
-    def get_to_set_speed(self):
+    def get_gripper_speed(self):
         """Get the gripper speed
 
         Returns:
@@ -591,7 +591,7 @@ class Gripper(Command):
         cmd=bytes(self.cmd_list)
         return self.send_cmd(cmd)
     
-    def get_io_open_angle(self):
+    def get_gripper_io_open_value(self):
         """Get the io opening angle
 
         Returns:
@@ -604,7 +604,7 @@ class Gripper(Command):
         cmd=bytes(self.cmd_list)
         return self.send_cmd(cmd)
     
-    def get_io_close_angle(self):
+    def get_gripper_io_close_value(self):
         """Get io closing angle
 
         Returns:
@@ -617,7 +617,7 @@ class Gripper(Command):
         cmd=bytes(self.cmd_list)
         return self.send_cmd(cmd)
     
-    def set_abs_gripper_angle(self,value,speed=100):
+    def set_abs_gripper_value(self,value,speed=100):
         """Set the absolute angle that the gripper reaches
 
 
@@ -761,16 +761,12 @@ class Gripper(Command):
         """
         self.set_gripper_speed(speed)
         if value==1:
-            return self.set_gripper_angle(100)
+            return self.set_gripper_value(100)
         elif value==0:
-            return self.set_gripper_angle(0)
+            return self.set_gripper_value(0)
             
         
-# if __name__=="__main__":
-#     g=Gripper("COM27")#Enter the actual serial port number
-#     g.set_gripper_state(0,100)
-#     time.sleep(2)
-#     g.set_gripper_state(1,100)
+
 
 
     
