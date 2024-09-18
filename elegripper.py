@@ -16,7 +16,7 @@ class Command():
     """
     Header =254
     Len=8
-    ID=14
+    ID=1
     Code=0
     Zero=0
     Number_High = 0
@@ -40,7 +40,7 @@ class Gripper(Command):
         self.lock=threading.Lock()
         self.port = port  
         self.baudrate = baudrate 
-        self.ser = serial.Serial(port, baudrate,timeout=20)
+        self.ser = serial.Serial(port, baudrate,timeout=5)
         self.cmd_list[3]=id   
 
     def __byte_deal(self,value1,value2):
