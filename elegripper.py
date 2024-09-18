@@ -40,7 +40,7 @@ class Gripper(Command):
         self.lock=threading.Lock()
         self.port = port  
         self.baudrate = baudrate 
-        self.ser = serial.Serial(port, baudrate,timeout=5)
+        self.ser = serial.Serial(port, baudrate,timeout=5)#timeout is the timeout period, the default value is 5 seconds
         self.cmd_list[3]=id   
 
     def __byte_deal(self,value1,value2):
