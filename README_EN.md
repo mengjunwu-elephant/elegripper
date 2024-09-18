@@ -193,7 +193,7 @@ python demo.py
 
 ### set_gripper_calibration()
 
-- **Function:** Set the gripper to rotate to the specified position at the specified speed
+- **Function:** Set the gripper Zero Calibration
 - **Parameter:** None
 - **Return:**`(int)` 0-1
   - `0`: Failed
