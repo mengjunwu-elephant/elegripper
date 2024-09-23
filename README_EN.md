@@ -231,7 +231,7 @@ python demo.py
 - **Function:** Set the clockwise running error of the gripper
 
 - **Parameter:**
-  - `value`: `(int)` Error, value range `0-254`
+  - `value`: `(int)` Error, value range `0-16`
 - **Return:** `(int)` 0-1
   - `0`: Failure
   - `1`: Success
@@ -241,7 +241,7 @@ python demo.py
 - **Function:** Set the counterclockwise running error of the gripper
 
 - **Parameter:**
-  - `value`: `(int)` Error, value range `0-254`
+  - `value`: `(int)` Error, value range `0-16`
 - **Return:** `(int)` 0-1
   - `0`: Failure
   - `1`: Success
