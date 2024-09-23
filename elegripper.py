@@ -406,7 +406,7 @@ class Gripper(Command):
         """Set the clockwise runnable error of the gripper
 
         Args:
-            value (int): The value range is 0-254
+            value (int): The value range is 0-16
 
         Returns:
             Response results:0 represents failure, 1 represents success
@@ -422,7 +422,7 @@ class Gripper(Command):
         """Get the clockwise runnable error of the gripper
 
         Returns:
-            Response results:0-254
+            Response results:0-16
         """
         self.cmd_list[4]=3
         tmp=self.__byte_deal(22,0)
@@ -435,7 +435,7 @@ class Gripper(Command):
         """Set the anti-clockwise runnable error of the gripper
 
         Args:
-            value (int): The value range is 0-254
+            value (int): The value range is 0-16
 
         Returns:
             Response results:0 represents failure, 1 represents success
@@ -451,7 +451,7 @@ class Gripper(Command):
         """Get the anti-clockwise runnable error of the gripper
 
         Returns:
-            Response results:0-254
+            Response results:0-16
         """
         self.cmd_list[4]=3
         tmp=self.__byte_deal(24,0)
