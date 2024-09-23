@@ -648,7 +648,6 @@ class Gripper(Command):
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
-        print(cmd.hex())
         return self.__send_cmd(cmd)
     
     def set_gripper_resume(self):
