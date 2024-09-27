@@ -16,7 +16,7 @@ class Command():
     """
     Header =254
     Len=8
-    ID=1
+    ID=14
     Code=0
     Zero=0
     Number_High = 0
@@ -29,7 +29,7 @@ class Command():
 
 class Gripper(Command):
 
-    def __init__(self,port,baudrate=115200,id=1) :
+    def __init__(self,port,baudrate=115200,id=14) :
         """
         Args:
             port : Serial port number
