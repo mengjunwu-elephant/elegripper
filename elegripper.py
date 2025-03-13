@@ -765,3 +765,6 @@ class Gripper(Command):
             return self.set_gripper_value(100)
         elif value==0:
             return self.set_gripper_value(0)
+
+    def close(self):
+        self.ser.close()
