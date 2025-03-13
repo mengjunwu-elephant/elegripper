@@ -41,7 +41,7 @@ class Gripper(Command):
         self.port = port  
         self.baudrate = baudrate 
         self.ser = serial.Serial(port, baudrate,timeout=5)#timeout is the timeout period, the default value is 5 seconds
-        self.cmd_list[3]=id   
+        self.cmd_list[3]=   
 
     def __byte_deal(self,value1,value2):
         """Convert decimal to hexadecimal
@@ -254,6 +254,7 @@ class Gripper(Command):
         for i in range(5,9):
             self.cmd_list[i]=tmp[i-5]
         cmd=bytes(self.cmd_list)
+        self.cmd_list[3]=value
         return self.__send_cmd(cmd)
     
     def get_gripper_Id(self):
